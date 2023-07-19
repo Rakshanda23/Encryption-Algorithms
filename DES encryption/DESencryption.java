@@ -144,6 +144,85 @@ class DESencryption
         return fvalue;
     }
 
+    public static int[] feistelStructure(int [] rightMapedIP ,int [] ep, int [] key1,String [][]s0, String [][]s1, int []leftMapedIP )
+    {
+        // left xor + s0s1 = rightmappedIP + Key + So + S1
+
+        int [] mapEP = new int[8];
+
+        for(int i=0;i<ep.length;i++)       // mapped EP with Right Maped IP (4-bit) {Expand}
+        {
+            mapEP[i] = rightMapedIP[ep[i]-1];
+        }
+
+
+        System.out.print("Mapped EP : ");
+        display(mapEP, mapEP.length);
+
+        int [] xorMapEP = new int[8];
+
+        for(int i=0;i<xorMapEP.length;i++)       // XOR mapped EP and KEY-1
+        {
+            if(mapEP[i]==key1[i])
+                xorMapEP[i] = 0;
+            else
+                xorMapEP[i] = 1;
+            
+        }
+        System.out.print("XOR - Mapped EP : ");
+        display(xorMapEP, xorMapEP.length);
+
+        int [] leftXORmapEP = new int[4];
+        int [] rightXORmapEP = new int[4];
+
+        for(int i=0;i<leftXORmapEP.length;i++)       // Left XOR mapped  EP
+        {
+            leftXORmapEP[i] = xorMapEP[i];
+        }
+
+        for(int i=0;i<rightXORmapEP.length;i++)       // Right XOR mapped  EP
+        {
+            rightXORmapEP[i] = xorMapEP[i+4];
+        }
+
+         System.out.print("left XOR Mapped IP : ");
+        display(leftXORmapEP, leftXORmapEP.length);
+
+         System.out.print("Right XOR Mapped IP : ");
+        display(rightXORmapEP, rightXORmapEP.length);
+
+        System.out.print("S0 Value : ");
+        int [] s0value = sBoxMaping(s0, leftXORmapEP); // maped Left XOR mapedEP with SO
+        display(s0value, s0value.length);
+
+        System.out.print("S1 Value : ");
+        int [] s1value = sBoxMaping(s1, rightXORmapEP); // maped Right XOR mapedEP with S1
+        display(s1value, s1value.length);
+
+        int [] mergeS0S1 = new int[4];
+        System.arraycopy(s0value, 0, mergeS0S1, 0, s0value.length); // merged s0 + s1
+        System.arraycopy(s1value, 0, mergeS0S1, s0value.length, s1value.length);
+
+        System.out.print("SO + S1 : ");
+        display(mergeS0S1, mergeS0S1.length);
+
+        int [] xorKeyS0S1 = new int[4];
+
+        for(int i=0;i<xorKeyS0S1.length;i++)       // XOR left mapped IP and SOS1 (merge)
+        {
+            if(mergeS0S1[i]==leftMapedIP[i])
+                xorKeyS0S1[i] = 0;
+            else
+                xorKeyS0S1[i] = 1;
+            
+        }
+
+        System.out.print("XOR LeftmapedIP + SOS1 : ");
+        display(xorKeyS0S1, xorKeyS0S1.length);
+
+        return xorKeyS0S1;
+    }
+
     public static void main(String[] args)
     {
         Scanner sc = new Scanner(System.in);
@@ -254,76 +333,110 @@ class DESencryption
          System.out.print("Right Mapped IP : ");
         display(rightMapedIP, rightMapedIP.length);
 
-        int [] mapEP = new int[8];
+        
+        //------------------------------------------------------------------------------
 
-        for(int i=0;i<ep.length;i++)       // mapped EP with Right Maped IP (4-bit) {Expand}
-        {
-            mapEP[i] = rightMapedIP[ep[i]-1];
-        }
+        // // left xor + s0s1 = rightmappedIP + Key + So + S1
 
-        System.out.print("Mapped EP : ");
-        display(mapEP, mapEP.length);
+        // int [] xorKeyS0S1 =feistelStructure(rightMapedIP,ep, key1, s0, s1, leftMapedIP );
 
-        int [] xorMapEP = new int[8];
 
-        for(int i=0;i<xorMapEP.length;i++)       // XOR mapped EP and KEY-1
-        {
-            if(mapEP[i]==key1[i])
-                xorMapEP[i] = 0;
-            else
-                xorMapEP[i] = 1;
+        // int [] mapEP = new int[8];
+
+        // for(int i=0;i<ep.length;i++)       // mapped EP with Right Maped IP (4-bit) {Expand}
+        // {
+        //     mapEP[i] = rightMapedIP[ep[i]-1];
+        // }
+
+
+        // System.out.print("Mapped EP : ");
+        // display(mapEP, mapEP.length);
+
+        // int [] xorMapEP = new int[8];
+
+        // for(int i=0;i<xorMapEP.length;i++)       // XOR mapped EP and KEY-1
+        // {
+        //     if(mapEP[i]==key1[i])
+        //         xorMapEP[i] = 0;
+        //     else
+        //         xorMapEP[i] = 1;
             
-        }
-        System.out.print("XOR - Mapped EP : ");
-        display(xorMapEP, xorMapEP.length);
+        // }
+        // System.out.print("XOR - Mapped EP : ");
+        // display(xorMapEP, xorMapEP.length);
 
-        int [] leftXORmapEP = new int[4];
-        int [] rightXORmapEP = new int[4];
+        // int [] leftXORmapEP = new int[4];
+        // int [] rightXORmapEP = new int[4];
 
-        for(int i=0;i<leftXORmapEP.length;i++)       // Left XOR mapped  EP
-        {
-            leftXORmapEP[i] = xorMapEP[i];
-        }
+        // for(int i=0;i<leftXORmapEP.length;i++)       // Left XOR mapped  EP
+        // {
+        //     leftXORmapEP[i] = xorMapEP[i];
+        // }
 
-        for(int i=0;i<rightXORmapEP.length;i++)       // Right XOR mapped  EP
-        {
-            rightXORmapEP[i] = xorMapEP[i+4];
-        }
+        // for(int i=0;i<rightXORmapEP.length;i++)       // Right XOR mapped  EP
+        // {
+        //     rightXORmapEP[i] = xorMapEP[i+4];
+        // }
 
-         System.out.print("left XOR Mapped IP : ");
-        display(leftXORmapEP, leftXORmapEP.length);
+        //  System.out.print("left XOR Mapped IP : ");
+        // display(leftXORmapEP, leftXORmapEP.length);
 
-         System.out.print("Right XOR Mapped IP : ");
-        display(rightXORmapEP, rightXORmapEP.length);
+        //  System.out.print("Right XOR Mapped IP : ");
+        // display(rightXORmapEP, rightXORmapEP.length);
 
-        System.out.print("S0 Value : ");
-        int [] s0value = sBoxMaping(s0, leftXORmapEP); // maped Left XOR mapedEP with SO
-        display(s0value, s0value.length);
+        // System.out.print("S0 Value : ");
+        // int [] s0value = sBoxMaping(s0, leftXORmapEP); // maped Left XOR mapedEP with SO
+        // display(s0value, s0value.length);
 
-        System.out.print("S1 Value : ");
-        int [] s1value = sBoxMaping(s1, rightXORmapEP); // maped Right XOR mapedEP with S1
-        display(s1value, s1value.length);
+        // System.out.print("S1 Value : ");
+        // int [] s1value = sBoxMaping(s1, rightXORmapEP); // maped Right XOR mapedEP with S1
+        // display(s1value, s1value.length);
 
-        int [] mergeS0S1 = new int[4];
-        System.arraycopy(s0value, 0, mergeS0S1, 0, s0value.length); // merged s0 + s1
-        System.arraycopy(s1value, 0, mergeS0S1, s0value.length, s1value.length);
+        // int [] mergeS0S1 = new int[4];
+        // System.arraycopy(s0value, 0, mergeS0S1, 0, s0value.length); // merged s0 + s1
+        // System.arraycopy(s1value, 0, mergeS0S1, s0value.length, s1value.length);
 
-        System.out.print("SO + S1 : ");
-        display(mergeS0S1, mergeS0S1.length);
+        // System.out.print("SO + S1 : ");
+        // display(mergeS0S1, mergeS0S1.length);
 
-        int [] xorKeyS0S1 = new int[4];
+        // int [] xorKeyS0S1 = new int[4];
 
-        for(int i=0;i<xorKeyS0S1.length;i++)       // XOR left mapped IP and SOS1 (merge)
-        {
-            if(mergeS0S1[i]==leftMapedIP[i])
-                xorKeyS0S1[i] = 0;
-            else
-                xorKeyS0S1[i] = 1;
+        // for(int i=0;i<xorKeyS0S1.length;i++)       // XOR left mapped IP and SOS1 (merge)
+        // {
+        //     if(mergeS0S1[i]==leftMapedIP[i])
+        //         xorKeyS0S1[i] = 0;
+        //     else
+        //         xorKeyS0S1[i] = 1;
             
+        // }
+
+        // System.out.print("XOR LeftmapedIP + SOS1 : ");
+        // display(xorKeyS0S1, xorKeyS0S1.length);
+
+        //--------------------------------------------------------------------------------------------
+
+        int [] xorKey1S0S1 =feistelStructure(rightMapedIP,ep, key1, s0, s1, leftMapedIP ); // round 1 
+
+        System.out.print("----------------------RightmapedIP : ");
+        display(rightMapedIP, rightMapedIP.length);
+
+        int [] swappedXORleftS0S1 = new int[8];         //// swapped xorKey1S0S1 + rightMapedIP
+        for(int i=0;i<swappedXORleftS0S1.length;i++)
+        {
+            if(i<4)
+                swappedXORleftS0S1[i] = rightMapedIP[i];
+            else
+                swappedXORleftS0S1[i] = xorKey1S0S1[i-4];
         }
 
-        System.out.print("XOR LeftmapedIP + SOS1 : ");
-        display(xorKeyS0S1, xorKeyS0S1.length);
+        System.out.print("Swapped  XOR LeftmapedIP and RightmapedIP : ");
+        display(swappedXORleftS0S1, swappedXORleftS0S1.length);
+
+        int [] leftSwappedR1 = new int [4];
+        int [] rightSwappedR1 = new int [4];
+
+        int [] xorKey2S0S1 = feistelStructure(rightMapedIP,ep, key2, s0, s1, leftMapedIP ); // round 1 
+
 
     }
 }
