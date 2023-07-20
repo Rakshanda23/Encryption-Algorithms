@@ -410,5 +410,9 @@ class DESencryption
         System.out.print("----------------------Cipher Text : ");
         display(mappedIPinverse, mappedIPinverse.length);
 
+        //-----------------------------------Encrption Ends------------------------------------
+
+        //------------------------------------------Decryption Starts--------------------------------------------
+
     }
 }
