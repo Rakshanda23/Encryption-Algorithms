@@ -349,9 +349,6 @@ class DESencryption
         System.out.println("------------------------Round 1-------------------------");
         int [] xorKey1S0S1 =feistelStructure(rightMapedIP,ep, key1, s0, s1,P4, leftMapedIP ); // round 1 
 
-        System.out.print("----------------------RightmapedIP : ");
-        display(rightMapedIP, rightMapedIP.length);
-
         int [] swappedXORleftS0S1 = new int[8];         //// swapped xorKey1S0S1 + rightMapedIP
         for(int i=0;i<swappedXORleftS0S1.length;i++)
         {
@@ -407,12 +404,112 @@ class DESencryption
             mappedIPinverse[i] = mergeXORkey2rightSwappedR1[IPinverse[i]-1];
         }
 
-        System.out.print("----------------------Cipher Text : ");
+        System.out.print("----------------------IP inverse: ");
         display(mappedIPinverse, mappedIPinverse.length);
+
+        int [] ciphertext = new int [8];
+        System.arraycopy(mappedIPinverse,0,ciphertext,0,mappedIPinverse.length);
+
+        System.out.print("----------------------Cipher Tex: ");
+        display(ciphertext,ciphertext.length);
 
         //-----------------------------------Encrption Ends------------------------------------
 
         //------------------------------------------Decryption Starts--------------------------------------------
         // startining with cipher text
+
+        System.out.println("------------------------------Decryption Starts----------------------------");
+        int [] mapIPInverseCipherText = new int[8];
+
+        for(int i=0;i<ciphertext.length;i++)       // mapped ip with P - plain txt
+        {
+            mapIPInverseCipherText[i] = ciphertext[ip[i]-1];
+        }
+        System.out.print("Mapped IP inverse with Cipher text : ");
+        display(mapIPInverseCipherText, mapIPInverseCipherText.length);
+
+        int [] leftCipherMapedIP = new int[4];
+        int [] rightCipherMapedIP = new int[4];
+
+        for(int i=0;i<leftCipherMapedIP.length;i++)       // Left mapped ip-inverse and Cipher -4 bits
+        {
+            leftCipherMapedIP[i] = mapIPInverseCipherText[i];
+        }
+
+        for(int i=0;i<leftCipherMapedIP.length;i++)       // Right mapped ip-inverse and Cipher -4 bits
+        {
+            rightCipherMapedIP[i] = mapIPInverseCipherText[i+4];
+        }
+
+         System.out.print("left Mapped IP Inverse + Cipher : ");
+        display(leftCipherMapedIP, leftCipherMapedIP.length);
+
+         System.out.print("Right Mapped IP Inverse + Cipher : ");
+        display(rightCipherMapedIP, rightCipherMapedIP.length);
+
+         System.out.println("------------------------Decrypt - Round 1-------------------------");
+        int [] xorKey2S0S1Cipher =feistelStructure(rightCipherMapedIP,ep, key2, s0, s1,P4, leftCipherMapedIP ); // round 1  Cipher
+
+        int [] swappedXORleftS0S1Cipher = new int[8];         //// swapped xorKey1S0S1 + rightMapedIP
+        for(int i=0;i<swappedXORleftS0S1Cipher.length;i++)
+        {
+            if(i<4)
+                swappedXORleftS0S1Cipher[i] = rightCipherMapedIP[i];
+            else
+                swappedXORleftS0S1Cipher[i] = xorKey2S0S1Cipher[i-4];
+        }
+
+        System.out.print("Cipher - Swapped  XOR LeftmapedIP and RightmapedIP : ");
+        display(swappedXORleftS0S1Cipher, swappedXORleftS0S1Cipher.length);
+
+        int [] leftSwappedR1Cipher = new int [4];
+        int [] rightSwappedR1Cipher = new int [4];
+
+         for(int i=0;i<leftSwappedR1Cipher.length;i++)       // LeftSwapped mapped ip -4 bits
+        {
+            leftSwappedR1Cipher[i] = swappedXORleftS0S1Cipher[i];
+        }
+
+        for(int i=0;i<rightSwappedR1Cipher.length;i++)       // RightSwapped mapped ip -4 bits
+        {
+            rightSwappedR1Cipher[i] = swappedXORleftS0S1Cipher[i+4];
+        }
+
+        System.out.print("Cipher  ------------leftSwappedR1 : ");
+        display(leftSwappedR1Cipher, leftSwappedR1Cipher.length);
+        System.out.print("Cipher  ------------rightSwappedR1 : ");
+        display(rightSwappedR1Cipher, rightSwappedR1Cipher.length);
+
+        System.out.println("-----------------------Decrypt - Round 2-------------------------");
+        int [] xorKey1S0S1Cipher = feistelStructure(rightSwappedR1Cipher,ep, key1, s0, s1,P4, leftSwappedR1Cipher ); // round 2
+
+        int [] mergeXORkey1rightSwappedR1Cipher = new int [8];    // Concatenate xor key2 S0S1 + right swapped R1
+
+        for(int i=0;i<mergeXORkey1rightSwappedR1Cipher.length;i++)
+        {
+            if(i<4)
+                mergeXORkey1rightSwappedR1Cipher[i] = xorKey1S0S1Cipher[i];
+            else
+                mergeXORkey1rightSwappedR1Cipher[i] = rightSwappedR1Cipher[i-4];
+        }
+
+        System.out.print("-------Cipher ----------merge XORkey1S0S1 + rightSwappedR1 : ");
+        display(mergeXORkey1rightSwappedR1Cipher, mergeXORkey1rightSwappedR1Cipher.length);
+
+        int [] mappedIPCipher = new int[8];
+
+        for(int i=0;i<mappedIPCipher.length;i++)
+        {
+            mappedIPCipher[i] = mergeXORkey1rightSwappedR1Cipher[IPinverse[i]-1];
+        }
+
+        System.out.print("----------------------IP: ");
+        display(mappedIPCipher, mappedIPCipher.length);
+
+        int [] plainText = new int [8];
+        System.arraycopy(mappedIPCipher,0,plainText,0,mappedIPCipher.length);
+
+        System.out.print("----------------------Plain Tex: ");
+        display(plainText,plainText.length);
     }
 }
