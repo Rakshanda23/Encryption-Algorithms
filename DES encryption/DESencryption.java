@@ -2,7 +2,6 @@ import java.util.*;
 
 class DESencryption
 {
-
     public static void display(int [] arr, int size)        //display array
     {
         for(int i=0;i<size;i++)
@@ -26,10 +25,6 @@ class DESencryption
         {
             right[i] = mapP10[i+size];
         }
-        // System.out.println("Left : ");
-        // display(left, size);
-        // System.out.println("Right : ");
-        // display(right, size);
 
         int [] leftShift = new int[size];
         int [] rightShift = new int[size];
@@ -44,11 +39,6 @@ class DESencryption
             leftShift[i+size-val] = left[i];
             rightShift[i+size-val] = right[i];
         }
-        // System.out.println("Left shift : ");
-        // display(leftShift, size);
-        // System.out.println("Right shift: ");
-        // display(rightShift, size);
-
         int [] shifted =  new int[mapP10.length] ;
 
         System.arraycopy(leftShift, 0, shifted, 0, leftShift.length);
@@ -66,44 +56,8 @@ class DESencryption
         {
             mapP8[i] = shiftedP10[p8[i]-1];
         }
-
-        // System.out.println("P8 : ");
-        // display(mapP8, mapP8.length);
-
         return mapP8;
     }
-
-    // public static int [] sBoxMaping(int[][] s, int[] xormappedEP)
-    // { 
-    //     int [] value = new int[2];
-
-    //     if(xormappedEP[0]==0 && xormappedEP[3]==0)
-    //         value[0]=0;
-    //     else if(xormappedEP[0]==0 && xormappedEP[3]==1)
-    //         value[0]=1;
-    //     else if(xormappedEP[1] == 0)
-    //         value[0] = 2;
-    //     else
-    //         value[0]=3;
-
-    //     if(xormappedEP[1]==0 && xormappedEP[2]==0)
-    //         value[1]=0;
-    //     else if(xormappedEP[1]==0 && xormappedEP[2]==1)
-    //         value[1]=1;
-    //     else if(xormappedEP[2] == 0)
-    //         value[1] = 2;
-    //     else
-    //         value[1]=3;
-
-    //     String [] sValue = ((s[value[0]][value[1]])+" ").split((""));
-    //      int [] fvalue = new int[2];
-
-    //     for (int i = 0; i < sValue.length; i++) {
-    //         fvalue[i] = Integer.parseInt(sValue[i]);
-    //     }
-
-    //     return fvalue;
-    // }
 
     public static int[] sBoxMaping(String[][] s, int[] xormappedEP)
     { 
@@ -127,10 +81,6 @@ class DESencryption
         else
             value[1]=3;
 
-
-        // System.out.println(value[0]);
-        // System.out.println(value[1]);
-
         String  str = (s[value[0]][value[1]]);
         String [] sValue = str.split("");
 
@@ -138,7 +88,6 @@ class DESencryption
 
         for (int i = 0; i < sValue.length; i++) {
             fvalue[i] = Integer.parseInt(sValue[i]);
-            // System.out.println("i = "+fvalue[i]);
         }
 
         return fvalue;
@@ -166,8 +115,7 @@ class DESencryption
             if(mapEP[i]==key1[i])
                 xorMapEP[i] = 0;
             else
-                xorMapEP[i] = 1;
-            
+                xorMapEP[i] = 1;            
         }
         System.out.print("XOR - Mapped EP : ");
         display(xorMapEP, xorMapEP.length);
@@ -223,8 +171,7 @@ class DESencryption
             if(P4mapS0S1[i]==leftMapedIP[i])
                 xorKeyS0S1[i] = 0;
             else
-                xorKeyS0S1[i] = 1;
-            
+                xorKeyS0S1[i] = 1;            
         }
 
         System.out.print("XOR LeftmapedIP + SOS1 : ");
@@ -260,47 +207,15 @@ class DESencryption
 
         int[] IPinverse = {4,1,3,5,7,2,8,6};  //remaining
 
-        //declare required variables
-        // int [] iv =new int[10];
-        // int [] p10 =new int[10];
-        // int [] p8 =new int[8];
-
-        //input for IV
-        // System.out.println("Enter Initial  Value : ");
-        // for(int i=0;i<iv.length;i++)
-        // {
-        //     iv[i] = sc.nextInt();
-        // }
-
-        // //input for P10
-        // System.out.println("Enter P10  Value : ");
-        // for(int i=0;i<p10.length;i++)
-        // {
-        //     p10[i] = sc.nextInt();
-        // }
-
-        // //input for P8
-        // System.out.println("Enter P8  Value : ");
-        // for(int i=0;i<p8.length;i++)
-        // {
-        //     p8[i] = sc.nextInt();
-        // }
-
         int [] mapP10 = new int[10];
 
         for(int i=0;i<p10.length;i++)       // mapped p10 with iv(K)
         {
             mapP10[i] = iv[p10[i]-1];
         }
-
-        // System.out.println("P10 : ");
-        // display(mapP10, mapP10.length);
-
         // Left shift array derived ------------------------------------------------- KEY 1
         int val = 1;
         int [] shiftedP10 = LeftShift(mapP10, val);
-        
-        // display(shiftedP10, shiftedP10.length);---------
 
         //Shift shiftedP10-10 bits into 8bits
 
@@ -416,8 +331,7 @@ class DESencryption
         //-----------------------------------Encrption Ends------------------------------------
 
         //------------------------------------------Decryption Starts--------------------------------------------
-        // startining with cipher text
-
+       
         System.out.println("------------------------------Decryption Starts----------------------------");
         int [] mapIPCipherText = new int[8];
 
