@@ -419,26 +419,26 @@ class DESencryption
         // startining with cipher text
 
         System.out.println("------------------------------Decryption Starts----------------------------");
-        int [] mapIPInverseCipherText = new int[8];
+        int [] mapIPCipherText = new int[8];
 
         for(int i=0;i<ciphertext.length;i++)       // mapped ip with P - plain txt
         {
-            mapIPInverseCipherText[i] = ciphertext[ip[i]-1];
+            mapIPCipherText[i] = ciphertext[ip[i]-1];
         }
-        System.out.print("Mapped IP inverse with Cipher text : ");
-        display(mapIPInverseCipherText, mapIPInverseCipherText.length);
+        System.out.print("Mapped IP  with Cipher text : ");
+        display(mapIPCipherText, mapIPCipherText.length);
 
         int [] leftCipherMapedIP = new int[4];
         int [] rightCipherMapedIP = new int[4];
 
-        for(int i=0;i<leftCipherMapedIP.length;i++)       // Left mapped ip-inverse and Cipher -4 bits
+        for(int i=0;i<leftCipherMapedIP.length;i++)       // Left mapped ip and Cipher -4 bits
         {
-            leftCipherMapedIP[i] = mapIPInverseCipherText[i];
+            leftCipherMapedIP[i] = mapIPCipherText[i];
         }
 
-        for(int i=0;i<leftCipherMapedIP.length;i++)       // Right mapped ip-inverse and Cipher -4 bits
+        for(int i=0;i<leftCipherMapedIP.length;i++)       // Right mapped ip and Cipher -4 bits
         {
-            rightCipherMapedIP[i] = mapIPInverseCipherText[i+4];
+            rightCipherMapedIP[i] = mapIPCipherText[i+4];
         }
 
          System.out.print("left Mapped IP Inverse + Cipher : ");
@@ -496,18 +496,18 @@ class DESencryption
         System.out.print("-------Cipher ----------merge XORkey1S0S1 + rightSwappedR1 : ");
         display(mergeXORkey1rightSwappedR1Cipher, mergeXORkey1rightSwappedR1Cipher.length);
 
-        int [] mappedIPCipher = new int[8];
+        int [] mappedIPInverseCipher = new int[8];
 
-        for(int i=0;i<mappedIPCipher.length;i++)
+        for(int i=0;i<mappedIPInverseCipher.length;i++)
         {
-            mappedIPCipher[i] = mergeXORkey1rightSwappedR1Cipher[IPinverse[i]-1];
+            mappedIPInverseCipher[i] = mergeXORkey1rightSwappedR1Cipher[IPinverse[i]-1];
         }
 
-        System.out.print("----------------------IP: ");
-        display(mappedIPCipher, mappedIPCipher.length);
+        System.out.print("----------------------IP inverse: ");
+        display(mappedIPInverseCipher, mappedIPInverseCipher.length);
 
         int [] plainText = new int [8];
-        System.arraycopy(mappedIPCipher,0,plainText,0,mappedIPCipher.length);
+        System.arraycopy(mappedIPInverseCipher,0,plainText,0,mappedIPInverseCipher.length);
 
         System.out.print("----------------------Plain Tex: ");
         display(plainText,plainText.length);
