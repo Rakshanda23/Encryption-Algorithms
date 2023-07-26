@@ -511,5 +511,7 @@ class DESencryption
 
         System.out.print("----------------------Plain Tex: ");
         display(plainText,plainText.length);
+
+        ////===---------------------------------Decrytion Done-----------------------------------------
     }
 }
